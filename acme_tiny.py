@@ -112,7 +112,7 @@ def get_crt(account_key, csr, acme_dir, log=LOGGER, CA=DEFAULT_CA):
             wellknown_file.write(keyauthorization)
 
         # check that the file is in place
-        wellknown_url = "http://{0}/.well-known/acme-challenge/{1}".format(domain, token)
+        wellknown_url = "https://{0}/.well-known/acme-challenge/{1}".format(domain, token)
         try:
             resp = urlopen(wellknown_url)
             resp_data = resp.read().decode('utf8').strip()
@@ -125,6 +125,7 @@ def get_crt(account_key, csr, acme_dir, log=LOGGER, CA=DEFAULT_CA):
         # notify challenge are met
         code, result = _send_signed_request(challenge['uri'], {
             "resource": "challenge",
+            "tls": True,
             "keyAuthorization": keyauthorization,
         })
         if code != 202:
